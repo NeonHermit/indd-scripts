@@ -52,16 +52,6 @@ Tested with Adobe InDesign CC2020 on Windows.
     $0
     ```
 
-* Any comma after which a number or whitespace does not follow:  
-    Find:
-    ```regex
-    ,(?=[^\s\d])
-    ```
-    Replace:
-    ```regex
-    malce e somnitelen receptot!
-    ```
-
 * Remove any space at the beginning of a paragraph:  
     Find:
     ```regex
