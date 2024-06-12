@@ -83,6 +83,22 @@ function findAndReplaceGREP(searchPattern, replacePattern, doc, includeMasterPag
 
     doc.changeGrep(); 
 
+    // if (includeMasterPages) {
+    //     var masterSpreads = doc.masterSpreads;
+    //     for (var i = 0; i < masterSpreads.length; i++) {
+    //         var masterSpread = masterSpreads[i];
+    //         var textFrames = masterSpread.textFrames;
+    //         for (var j = 0; j < textFrames.length; j++) {
+    //             if (containsVariable(textFrames[j].contents, searchPattern, true)) {
+    //                 var foundItems = textFrames[j].findGrep();
+    //                 for (var k = 0; k < foundItems.length; k++) {
+    //                     foundItems[k].contents = replacePattern;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
     if (includeMasterPages) {
         var masterSpreads = doc.masterSpreads;
         for (var i = 0; i < masterSpreads.length; i++) {
@@ -90,10 +106,7 @@ function findAndReplaceGREP(searchPattern, replacePattern, doc, includeMasterPag
             var textFrames = masterSpread.textFrames;
             for (var j = 0; j < textFrames.length; j++) {
                 if (containsVariable(textFrames[j].contents, searchPattern, true)) {
-                    var foundItems = textFrames[j].findGrep();
-                    for (var k = 0; k < foundItems.length; k++) {
-                        foundItems[k].contents = replacePattern;
-                    }
+                    textFrames[j].contents = textFrames[j].contents.replace(searchPattern, replacePattern);
                 }
             }
         }
@@ -110,5 +123,6 @@ function containsVariable(text, searchPattern, isGrep) {
         return text.indexOf(searchPattern) !== -1;
     }
 }
+
 
 batchReplaceInInDesignFiles();
