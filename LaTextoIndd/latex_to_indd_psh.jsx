@@ -1,5 +1,9 @@
 var dialog = new Window("dialog", "Place your LaTeX Equation");
 
+// Crop checkbox
+var cropCheckbox = dialog.add("checkbox", undefined, "Crop the result");
+cropCheckbox.value = true;
+
 // Input box, size
 var latexInput = dialog.add("edittext", undefined, "", {multiline: true});
 latexInput.size = [800, 600];
@@ -46,8 +50,17 @@ if (!texSubDir.exists) {
 }
 
 // Generate unique file name based on current timestamp
-var timestamp = (new Date()).getTime();
-var latexFileName = "latexInput_" + timestamp + ".tex";
+var now = new Date();
+var year = now.getFullYear();
+var month = ("0" + (now.getMonth() + 1)).slice(-2);
+var day = ("0" + now.getDate()).slice(-2);
+var hour = ("0" + now.getHours()).slice(-2);
+var minute = ("0" + now.getMinutes()).slice(-2);
+var second = ("0" + now.getSeconds()).slice(-2);
+
+var formattedTime = year + "-" + month + "-" + day + "-" + hour + "-" + minute + "-" + second;
+var latexFileName = "latexInput_" + formattedTime + ".tex";
+
 var latexFile = File(texSubDir + "/" + latexFileName);
 
 latexFile.encoding = "UTF8";
@@ -56,9 +69,7 @@ latexFile.writeln(fullLatexCode);
 latexFile.close();
 
 var processorPath = "C:\\Users\\velibor\\Documents\\helperUtil\\texCompileHelp.exe";
-
-// Create a temporary batch file to execute the PowerShell command
-var psCommand = 'powershell.exe -windowstyle hidden -ExecutionPolicy Bypass -Command "Start-Process -FilePath \'' + processorPath + '\' -ArgumentList \'' + latexFile.fsName + '\' -NoNewWindow -Wait"';
+var psCommand = 'powershell.exe -windowstyle hidden -ExecutionPolicy Bypass -Command "Start-Process -FilePath \'' + processorPath + '\' -ArgumentList \'' + latexFile.fsName + (cropCheckbox.value ? ' crop' : '') + '\' -NoNewWindow -Wait"';
 
 var batFile = File(texSubDir + "/tempExecute.bat");
 batFile.open('w');
